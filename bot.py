@@ -110,7 +110,7 @@ def opd(uhid_no):
 
 
 #booking appointment lab
-def lab(uhid_no ='CHRL-00-00000073',name='badhshah   AB'):
+def lab(uhid_no,name=):
     register_patient = driver.find_element_by_xpath('//*[@id="exampleAccordion"]/li[2]/a/span')
     register_patient.click()
     time.sleep(2)
@@ -162,7 +162,7 @@ def lab(uhid_no ='CHRL-00-00000073',name='badhshah   AB'):
 
 
 # reservation
-def reserv(name ='badhshah AB',num ='9995989129'):
+def reserv(name ,num ):
     reserve_app = driver.find_element_by_xpath('//*[@id="exampleAccordion"]/li[10]/a/span')
     reserve_app.click()
     time.sleep(2)
@@ -188,7 +188,7 @@ def reserv(name ='badhshah AB',num ='9995989129'):
     time.sleep(2)
 
 #confirm reservation
-def confi(name='badhshah AB'):
+def confi(name):
     reserve_app = driver.find_element_by_xpath('//*[@id="exampleAccordion"]/li[10]/a/span')
     reserve_app.click()
     time.sleep(5)
