@@ -110,7 +110,7 @@ def opd(uhid_no):
 
 
 #booking appointment lab
-def lab(uhid_no,name=):
+def lab(uhid_no,name):
     register_patient = driver.find_element_by_xpath('//*[@id="exampleAccordion"]/li[2]/a/span')
     register_patient.click()
     time.sleep(2)
