@@ -1,4 +1,4 @@
-# ***Shoud install chrome driver of version matching with your chrome browser. Also rename the executable_path with the path of your chrome diver in the 13th line of code***
+# ***Shoud install chrome driver of version matching with your chrome browser. Also rename the executable_path with the path to your chrome diver in the 13th line of code***
 
 
 For registration of new patients	 **registration()**   function can be used.
