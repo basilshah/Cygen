@@ -6,6 +6,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+import logging
+logging.basicConfig(filename='bot.log',format='%(asctime)s: %(levelname)s: %(message)s', datefmt='%y/%m/%d %H:%M:%S', level=logging.INFO, filemode='w')
 
 opt = Options()
 opt.add_argument('start-maximized')
@@ -18,6 +20,7 @@ driver.get("http://training.cygendiagnostics.com/")
 driver.find_element_by_id("inputEmail").send_keys('saikiran@129')
 driver.find_element_by_id("inputPassword").send_keys('saikiran1999')
 driver.find_element_by_id("loginsubmit").click()
+logging.info('Logined successfully')
 time.sleep(2)
 
 #registation
@@ -67,10 +70,11 @@ def registration():
     driver.find_element_by_xpath("/html/body/div[12]/div[11]/div/button[1]").click()
     time.sleep(2)
     driver.refresh()
+    logging.info('Registration was successfull')
 
 
 #booking appointment OPD
-def opd(uhid_no):
+def opd(uhid_no,appointment_date):
     register_patient = driver.find_element_by_xpath('//*[@id="exampleAccordion"]/li[2]/a/span')
     register_patient.click()
     time.sleep(2)
@@ -96,21 +100,31 @@ def opd(uhid_no):
                 break
             except:
                 pass
+    time.sleep(2)
     driver.find_element_by_id('submitDoctorSpeciality').click()
     time.sleep(2)
     # billing OP
-    driver.find_element_by_xpath('//*[@id="group"]').click()
-    time.sleep(2)
+    try:
+
+        driver.find_element_by_xpath('//*[@id="group"]').click()
+        time.sleep(2)
+    except:
+        driver.save_screenshot("error.png")
+        logging.info('Patient already have an appoinment')
+        time.sleep(10)
+        driver.__exit__()
+        exit()
     pay_mode = driver.find_element_by_id('transaction_mode')
     Select(pay_mode).select_by_value('ff0001ab-af93-4477-b959-85a73bc91443')
     driver.find_element_by_xpath('//*[@id="opdbutton"]').click()
     time.sleep(2)
     driver.find_element_by_id('print').click()
     time.sleep(2)
+    logging.info('OPD appointment booked successfully')
 
 
 #booking appointment lab
-def lab(uhid_no,name):
+def lab(uhid_no,name_lab):
     register_patient = driver.find_element_by_xpath('//*[@id="exampleAccordion"]/li[2]/a/span')
     register_patient.click()
     time.sleep(2)
@@ -120,15 +134,15 @@ def lab(uhid_no,name):
     time.sleep(2)
     appoinment_type = driver.find_element_by_xpath('//*[@id="patienttype"]')
     Select(appoinment_type).select_by_index(3)
+    time.sleep(2)
     doc = driver.find_element_by_xpath('//*[@id="doctorNameSpeciality"]')
     doc.click()
-    time.sleep(2)
     doc.send_keys(Keys.DOWN, Keys.DOWN, Keys.RETURN)
     submit = driver.find_element_by_xpath('//*[@id="submitDoctorSpeciality"]')
     submit.click()
     time.sleep(4)
     serch_box = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="root"]/div/div/div[2]/div/div[1]/div[3]/div/input')))
-    driver.find_element_by_xpath('//*[@id="root"]/div/div/div[2]/div/div[1]/div[3]/div/input').send_keys(name)
+    driver.find_element_by_xpath('//*[@id="root"]/div/div/div[2]/div/div[1]/div[3]/div/input').send_keys(name_lab)
     time.sleep(2)
     buttons = driver.find_elements_by_xpath('//*[@class="MuiButtonBase-root MuiIconButton-root"][@tabindex="0"]')
     buttons[2].click()
@@ -159,10 +173,34 @@ def lab(uhid_no,name):
     prin = driver.find_element_by_id('print')
     prin.location_once_scrolled_into_view
     prin.click()
+    logging.info('LAB appointment booked successfully')
+
+
+def diagno(uhid_no):
+    register_patient = driver.find_element_by_xpath('//*[@id="exampleAccordion"]/li[2]/a/span')
+    register_patient.click()
+    time.sleep(2)
+    ur = "//a[@href='/appointments/" + uhid_no + "/']"
+    booking = driver.find_element_by_xpath(ur)
+    booking.click()
+    time.sleep(2)
+    appoinment_type = driver.find_element_by_xpath('//*[@id="patienttype"]')
+    Select(appoinment_type).select_by_index(4)
+    doc = driver.find_element_by_xpath('//*[@id="doctorNameSpeciality"]')
+    doc.click()
+    time.sleep(2)
+    doc.send_keys(Keys.DOWN, Keys.RETURN)
+    driver.find_element_by_id('submitDoctorSpeciality').click()
+    time.sleep(2)
+    logging.info('Diagnostic appointment booked successfully')
+
+
+
+
 
 
 # reservation
-def reserv(name ,num ):
+def reserv(name ,num,appointment_date ):
     reserve_app = driver.find_element_by_xpath('//*[@id="exampleAccordion"]/li[10]/a/span')
     reserve_app.click()
     time.sleep(2)
@@ -186,6 +224,7 @@ def reserv(name ,num ):
             break
     driver.find_element_by_xpath('//*[@id="root"]/div/div/div/div/ul/li[6]/button/span[1]').click()
     time.sleep(2)
+    logging.info('Reservation was done successfully')
 
 #confirm reservation
 def confi(name):
@@ -204,10 +243,19 @@ def confi(name):
             tick_xpath ='/html/body/div/div/div/div/div/div/div/div[2]/table/tbody['+str(i)+']/tr/td[6]/button'
             driver.find_element_by_xpath(tick_xpath).click()
     time.sleep(5)
-    try:
-        driver.find_element_by_xpath('/html/body/div[4]/div[3]/div/div/div/div/div[2]/table/tbody/tr/td[4]/button/span[1]').click()
-    except:
-        driver.find_element_by_xpath('/html/body/div[3]/div[3]/div/div/div/div/div[2]/table/tbody/tr/td[4]/button/span[1]').click()
+    tot = driver.find_elements_by_xpath('/html/body/div[2]/div[3]/div/div/div/div/div[2]/table/tbody')
+    tot_num = len(tot)
+    print(tot_num)
+    for i in range(1,tot_num+1):
+        name_xpath = '/html/body/div[2]/div[3]/div/div/div/div/div[2]/table/tbody['+str(i)+']/tr/td[2]'
+        nameee = driver.find_element_by_xpath(name_xpath)
+        namee = nameee.text
+
+        if namee == name:
+            confirm_xpath ='/html/body/div[2]/div[3]/div/div/div/div/div[2]/table/tbody['+str(i)+']/tr/td[4]/button'
+            cli = driver.find_element_by_xpath(confirm_xpath)
+            driver.execute_script("arguments[0].click();",cli)
+
     WebDriverWait(driver, 10).until(EC.alert_is_present())
     driver.switch_to.alert.accept()
     time.sleep(2)
@@ -219,11 +267,12 @@ def confi(name):
     time.sleep(2)
     driver.find_element_by_id('print').click()
     time.sleep(2)
+    logging.info('Reservation was confirmed')
 
 
 
 #doc availability
-def doc_avai(ti = '09:20:00'):
+def doc_avai(appointment_date,ti):
     driver.find_element_by_xpath('//*[@id="exampleAccordion"]/li[6]/a').click()
     time.sleep(2)
     driver.find_element_by_xpath('//*[@id="Doctorreceptionisttable"]/tr[2]/td[10]/a').click()
@@ -239,20 +288,13 @@ def doc_avai(ti = '09:20:00'):
             i.click()
             time.sleep(2)
             driver.find_element_by_id('confirmblock').click()
+            logging.info('Doc avalilablity slot was edited')
+            exit()
+    driver.save_screenshot("doc_availablity.png")
+    logging.info('not able to edit the slot please see the screenshot')
 
 
 
-
-
-#for registration                  -    registration()
-#for booking appointment OP        -    opd()
-#for booking appointment LAB       -    lab()
-#for reservation                   -    reserv()
-#to confirm reservation            -    confi()
-# doc availablity                  -    doc_avai()
-
-# for registration please re-enter the creds
-#for searching the names in lab please add 2 space between first name and middle name, also 3 spaces between first name and last name.
 
 creds = {"first_name":"badhshah",
          "middle_name":"",
@@ -273,8 +315,13 @@ creds = {"first_name":"badhshah",
          }
 
 
-appointment_date = 14082021
+
+#for searching the names in lab please add 2 space between first name and middle name, also 3 spaces between first name and last name.
+
+appointment_date = 22092021
 uhid_no ='CHRL-00-00000073'
-name ='badhshah AB'
-name_lab ="badhshah   Ab"
-num ='9995989129'
+name ='hafiz ashraf Shah'
+name_lab ="hafiz  ashraf Shah"
+num ='9995989127'
+ti ='09:20:00'
+
