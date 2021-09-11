@@ -40,7 +40,6 @@ def registration(creds,driver):
 
     blood_gp = driver.find_element_by_id("patientbloodgroup")
     Select(blood_gp).select_by_value(creds["blood"])
-
     pat_type = driver.find_element_by_id("patient_type")
     pat_type.location_once_scrolled_into_view
     Select(pat_type).select_by_value(creds["type"])
