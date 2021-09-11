@@ -26,7 +26,6 @@ def appointment_selection(uhid_no,type_of_appointment,driver):
     Select(appoinment_type).select_by_index(indx)
     time.sleep(2)
 
-
 # booking appointment OPD
 def opd(uhid_no, appointment_date,driver):
 
