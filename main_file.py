@@ -23,7 +23,6 @@ driver.find_element_by_id("inputPassword").send_keys('saikiran1999')
 driver.find_element_by_id("loginsubmit").click()
 time.sleep(2)
 
-
 # enter the details for the new registration
 creds = {"first_name": "manu",
          "middle_name": "",
