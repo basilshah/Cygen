@@ -73,7 +73,8 @@ def reserv(name, num, appointment_date,driver):
     time.sleep(2)
     print('Reservation was confirmed')
     driver.__exit__()
-
+    
+    
 # doc availability
 def doc_avai(appointment_date, ti ,driver):
     driver.find_element_by_xpath('//*[@id="exampleAccordion"]/li[6]/a').click()
