@@ -15,7 +15,6 @@ For booking appointment diagnostic  		**diagno(uhid_no,driver)**
 For reservation 	**reserv(name, num, appointment_date,driver)**
 __While entering date enter numbers only.__
 
-For confirming reservation  	**confi(name,driver)**
 
 for doctor availability **doc_avai(appointment_date, ti,driver)** 
 The value for ti should be of “09:20:00”
