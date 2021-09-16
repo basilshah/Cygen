@@ -1,7 +1,1 @@
-##required packages
-*selenium
-*pytest
-*pytest-html
-*pytest-xdist
-*openpyxl
-*allure-pytest
+# GOTO THE MASTER BRANCH
