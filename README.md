@@ -1,7 +1,7 @@
-#required packages
-selenium
-pytest
-pytest-html
-pytest-xdist
-openpyxl
-allure-pytest
+##required packages
+*selenium
+*pytest
+*pytest-html
+*pytest-xdist
+*openpyxl
+*allure-pytest
