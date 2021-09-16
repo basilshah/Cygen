@@ -1,3 +1,3 @@
-pytest -v -s --html=./reports/report.html testCases/
+pytest -v -s --html=./report.html testCases/
 
 
